@@ -1,0 +1,143 @@
+# tilelang-op-tests 用例清单 (由 tools/generate_testcases.py 生成)
+# 生成时间: 2026-11-25 10:51:03
+# 用例总数: 124
+#   dsa/test_dsa.py: 21
+#   dsa/test_dsa_gbsa_baseline.py: 4
+#   dsa/test_dsa_gbsa_baseline_bnsd.py: 4
+#   gqa/test_gqa.py: 16
+#   mha/test_mha.py: 12
+#   mhc/test_mhc.py: 60
+#   mixed_triton_tilelang/test_mixed_deployment.py: 7
+#
+# 使用说明 (本文件可直接编辑):
+#   - 每行一个 pytest 节点 ID; 空行与 '#' 开头的注释行不执行;
+#   - 不想执行某条用例: 整行注释 (行首加 '#') 或删除该行;
+#   - 想补充用例: 直接追加一行合法节点 ID;
+#   - 建议复制本文件到 run_tests.sh 所在目录维护 (外部清单优先, 不受 git 更新影响);
+#   - 仓库新增用例后: python tools/generate_testcases.py --sync <你的清单> 追加新用例。
+#
+
+dsa/test_dsa.py::test_case_configs_satisfy_kernel_constraints
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq32_t96_nb8]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq32_t96_nb8_all_keep]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq32_t1024_nb8]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq16_t2048_nb8]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b2_sq32_t512_nb16]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq32_t512_nb8_all_drop]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq16_t160_nb8]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq8_t257_nb8]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq4_t2049_nb4]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq16_t2048_hpt32]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq17_t2049_hpt2]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq1_t257_hpt64]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq3_t257_nb28]
+dsa/test_dsa.py::test_dsa_correctness[dsa_b1_sq448_t4096]
+dsa/test_dsa.py::test_both_halves_of_a_tile_contribute
+dsa/test_dsa.py::test_vector_mask_flags[256]
+dsa/test_dsa.py::test_vector_mask_flags[2048]
+dsa/test_dsa.py::test_vector_mask_flags[8192]
+dsa/test_dsa.py::test_dsa_perf[dsa_b1_sq16_t2048_nb8]
+dsa/test_dsa.py::test_dsa_perf[dsa_b1_sq448_t4096]
+dsa/test_dsa_gbsa_baseline.py::test_dsa_perf_vs_gbsa[gbsa_b1_sq16_t2048]
+dsa/test_dsa_gbsa_baseline.py::test_dsa_perf_vs_gbsa[gbsa_b2_sq32_t512]
+dsa/test_dsa_gbsa_baseline.py::test_dsa_perf_vs_gbsa[gbsa_b1_sq17_t2049]
+dsa/test_dsa_gbsa_baseline.py::test_dsa_perf_vs_gbsa[gbsa_b1_sq448_t4096]
+dsa/test_dsa_gbsa_baseline_bnsd.py::test_dsa_perf_vs_gbsa_bnsd[gbsa_b1_sq16_t2048]
+dsa/test_dsa_gbsa_baseline_bnsd.py::test_dsa_perf_vs_gbsa_bnsd[gbsa_b2_sq32_t512]
+dsa/test_dsa_gbsa_baseline_bnsd.py::test_dsa_perf_vs_gbsa_bnsd[gbsa_b1_sq17_t2049]
+dsa/test_dsa_gbsa_baseline_bnsd.py::test_dsa_perf_vs_gbsa_bnsd[gbsa_b1_sq448_t4096]
+gqa/test_gqa.py::test_case_configs_satisfy_kernel_constraints
+gqa/test_gqa.py::test_gqa_correctness[s1-128_g-1_s2-128]
+gqa/test_gqa.py::test_gqa_correctness[s1-128_g-2_s2-256]
+gqa/test_gqa.py::test_gqa_correctness[s1-256_g-2_s2-512]
+gqa/test_gqa.py::test_gqa_correctness[s1-1024_g-8_s2-1024]
+gqa/test_gqa.py::test_gqa_correctness[s1-512_g-4_s2-1024]
+gqa/test_gqa.py::test_gqa_correctness[s1-128_g-28_s2-1024]
+gqa/test_gqa.py::test_gqa_correctness[s1-896_g-32_s2-2048]
+gqa/test_gqa.py::test_gqa_correctness[s1-8192_g-28_s2-8192]
+gqa/test_gqa.py::test_gqa_correctness[s1-7168_g-32_s2-8192]
+gqa/test_gqa.py::test_gqa_correctness[s1-7168_g-32_s2-7168]
+gqa/test_gqa.py::test_gqa_correctness[s1-8192_g-32_s2-8192]
+gqa/test_gqa.py::test_gqa_perf[s1-8192_g-28_s2-8192]
+gqa/test_gqa.py::test_gqa_perf[s1-7168_g-32_s2-8192]
+gqa/test_gqa.py::test_gqa_perf[s1-7168_g-32_s2-7168]
+gqa/test_gqa.py::test_gqa_perf[s1-8192_g-32_s2-8192]
+mha/test_mha.py::test_case_configs_satisfy_kernel_constraints
+mha/test_mha.py::test_mha_correctness[mha_static_q128-k128]
+mha/test_mha.py::test_mha_correctness[mha_static_q256-k256]
+mha/test_mha.py::test_mha_correctness[mha_static_q1024-k1024]
+mha/test_mha.py::test_mha_correctness[mha_static_q4096-k4096]
+mha/test_mha.py::test_mha_correctness[mha_static_q3584-k3584]
+mha/test_mha.py::test_mha_correctness[mha_static_q7168-k7168_nb28]
+mha/test_mha.py::test_mha_correctness[mha_dyn_q4096-k128_q4097-k128_q4097-k256]
+mha/test_mha.py::test_mha_correctness[mha_dyn_q4096-k4096_q7168-k7168]
+mha/test_mha.py::test_mha_perf[mha_static_q4096-k4096]
+mha/test_mha.py::test_mha_perf[mha_static_q7168-k7168_nb28]
+mha/test_mha.py::test_mha_perf[mha_dyn_q4096-k4096_q7168-k7168]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[2304-4096-mk]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[2305-4096-large]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[2400-4096-mk]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[2401-4096-large]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[2560-5120-mk]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[2561-5120-large]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[3136-7168-large]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[3584-7168-mk]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[3585-7168-large]
+mhc/test_mhc.py::test_routing_preserves_original_mk_complete_tiles[8192-4096-large]
+mhc/test_mhc.py::test_other_core_capacities_retain_their_partition[2305-24-48-mk]
+mhc/test_mhc.py::test_other_core_capacities_retain_their_partition[3073-24-48-large]
+mhc/test_mhc.py::test_other_core_capacities_retain_their_partition[2305-32-56-mk]
+mhc/test_mhc.py::test_other_core_capacities_retain_their_partition[3585-32-56-large]
+mhc/test_mhc.py::test_other_core_capacities_retain_their_partition[3585-32-64-mk]
+mhc/test_mhc.py::test_other_core_capacities_retain_their_partition[4097-32-64-large]
+mhc/test_mhc.py::test_invalid_geometry_is_rejected[0-4096-28-56]
+mhc/test_mhc.py::test_invalid_geometry_is_rejected[-1-4096-28-56]
+mhc/test_mhc.py::test_invalid_geometry_is_rejected[True-4096-28-56]
+mhc/test_mhc.py::test_invalid_geometry_is_rejected[16-4097-28-56]
+mhc/test_mhc.py::test_invalid_geometry_is_rejected[1-4096-0-56]
+mhc/test_mhc.py::test_invalid_geometry_is_rejected[1-4096-28-1]
+mhc/test_mhc.py::test_case_configs_satisfy_kernel_constraints
+mhc/test_mhc.py::test_pre_cpu_inputs_are_rejected_before_device_compilation
+mhc/test_mhc.py::test_post_cpu_inputs_are_rejected_before_device_compilation
+mhc/test_mhc.py::test_post_invalid_geometry_is_rejected[empty]
+mhc/test_mhc.py::test_post_invalid_geometry_is_rejected[hidden]
+mhc/test_mhc.py::test_post_invalid_geometry_is_rejected[mix_shape]
+mhc/test_mhc.py::test_post_invalid_geometry_is_rejected[cores_zero]
+mhc/test_mhc.py::test_post_invalid_geometry_is_rejected[cores_bool]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h4096_n16]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h4096_n1_zero]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h5120_n33]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h7168_n129]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h4096_n2305]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h5120_n2400]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h7168_n2401]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h4096_n3137_flat]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h5120_n3584]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h7168_n3585]
+mhc/test_mhc.py::test_mhc_pre_correctness[pre_h4096_n8192]
+mhc/test_mhc.py::test_mhc_post_correctness[post_h4096_b1]
+mhc/test_mhc.py::test_mhc_post_correctness[post_h4096_b57_sq]
+mhc/test_mhc.py::test_mhc_post_correctness[post_h5120_b85]
+mhc/test_mhc.py::test_mhc_post_correctness[post_h7168_b2x17]
+mhc/test_mhc.py::test_mhc_post_correctness[post_h5120_b17_sq_c4]
+mhc/test_mhc.py::test_mhc_post_correctness[post_h4096_b4096]
+mhc/test_mhc.py::test_pre_bound_launch_uses_current_stream_and_fresh_outputs[mk]
+mhc/test_mhc.py::test_pre_bound_launch_uses_current_stream_and_fresh_outputs[large]
+mhc/test_mhc.py::test_pre_functional_cache_accepts_new_input_objects
+mhc/test_mhc.py::test_post_current_stream_fresh_outputs_and_new_inputs
+mhc/test_mhc.py::test_pre_invalid_npu_inputs_are_rejected[dtype]
+mhc/test_mhc.py::test_pre_invalid_npu_inputs_are_rejected[noncontiguous]
+mhc/test_mhc.py::test_post_invalid_device_inputs_are_rejected[dtype]
+mhc/test_mhc.py::test_post_invalid_device_inputs_are_rejected[noncontiguous]
+mhc/test_mhc.py::test_post_invalid_device_inputs_are_rejected[batch_shape]
+mhc/test_mhc.py::test_post_invalid_device_inputs_are_rejected[device]
+mhc/test_mhc.py::test_pre_outputs_feed_post_on_the_same_stream
+mhc/test_mhc.py::test_mhc_pre_perf[pre_h4096_n8192]
+mhc/test_mhc.py::test_mhc_post_perf[post_h4096_b4096]
+mixed_triton_tilelang/test_mixed_deployment.py::test_env_info
+mixed_triton_tilelang/test_mixed_deployment.py::test_same_process_import_order
+mixed_triton_tilelang/test_mixed_deployment.py::test_same_process_tilelang_then_triton
+mixed_triton_tilelang/test_mixed_deployment.py::test_same_process_triton_then_tilelang
+mixed_triton_tilelang/test_mixed_deployment.py::test_same_process_interleaved
+mixed_triton_tilelang/test_mixed_deployment.py::test_cross_process_sequential
+mixed_triton_tilelang/test_mixed_deployment.py::test_cross_process_concurrent
