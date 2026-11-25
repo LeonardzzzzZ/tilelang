@@ -6,9 +6,14 @@
 #   bash run_tests.sh                 # 克隆/更新仓库并执行 testcases.txt 全部用例
 #
 # 可配环境变量 (均有默认值):
-#   REPO_URL           仓库地址 (默认 gitcode 上的 tilelang-op-tests)
+#   REPO_URL           仓库地址 (本副本默认 github 上的 LeonardzzzzZ/tilelang;
+#                      独立仓布局: gitcode 上的 tilelang-op-tests)
 #   GIT_TOKEN          访问令牌 (私有仓需要; 会注入 https 克隆 URL)
-#   GIT_USER           https 认证用户名 (默认 oauth2; gitcode 也可用账号名)
+#   GIT_USER           https 认证用户名 (默认 oauth2; PAT 作为密码)
+#   REPO_BRANCH        克隆/更新的分支 (本副本默认 tilelang-op-tests;
+#                      独立仓布局用 main)
+#   SUITE_REL_PATH     测试套件相对仓库根的路径 (独立仓默认为空; github 嵌套
+#                      布局为 examples/ascend/tilelang-op-tests)
 #   PYTHON             python 解释器 (默认 python3; 有 conda/venv 时按需指定)
 #   TESTCASES_FILE     用例清单文件名 (默认 testcases.txt); 查找优先级:
 #                      绝对路径 > 脚本所在目录(用户自维护, 增删/注释#均生效,
@@ -34,7 +39,7 @@ set -uo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_NAME="tilelang-op-tests"
 REPO_DIR="${SCRIPT_DIR}/${REPO_NAME}"
-REPO_URL="${REPO_URL:-https://gitcode.com/leonardzzZ/tilelang-op-tests.git}"
+REPO_URL="${REPO_URL:-https://github.com/LeonardzzzzZ/tilelang.git}"
 GIT_TOKEN="${GIT_TOKEN:-}"
 GIT_USER="${GIT_USER:-oauth2}"
 PYTHON="${PYTHON:-python3}"
@@ -42,6 +47,12 @@ TESTCASES_FILE="${TESTCASES_FILE:-testcases.txt}"
 CASE_TIMEOUT="${CASE_TIMEOUT:-1800}"
 EXTRA_PYTEST_ARGS="${EXTRA_PYTEST_ARGS:-}"
 REGENERATE_CASES="${REGENERATE_CASES:-0}"
+# 布局适配 (本副本嵌在 tilelang 大仓中):
+#   本布局 (github fork):     REPO_BRANCH=tilelang-op-tests,
+#                            SUITE_REL_PATH=examples/ascend/tilelang-op-tests
+#   独立仓布局 (gitcode):     REPO_BRANCH=main, SUITE_REL_PATH="" (套件即仓库根)
+REPO_BRANCH="${REPO_BRANCH:-tilelang-op-tests}"
+SUITE_REL_PATH="${SUITE_REL_PATH:-examples/ascend/tilelang-op-tests}"
 
 TS="$(date +%Y%m%d_%H%M%S)"
 LOG_DIR="${SCRIPT_DIR}/logs/${TS}"
@@ -63,19 +74,31 @@ if [ -n "${GIT_TOKEN}" ]; then
 fi
 
 if [ -d "${REPO_DIR}/.git" ]; then
-    log "仓库已存在, git pull 更新: ${REPO_DIR}"
+    log "仓库已存在, 更新: ${REPO_DIR} (分支 ${REPO_BRANCH})"
+    git -C "${REPO_DIR}" fetch origin "${REPO_BRANCH}" 2>/dev/null || log "[warn] git fetch 失败"
+    git -C "${REPO_DIR}" checkout "${REPO_BRANCH}" 2>/dev/null || log "[warn] 切换到分支 ${REPO_BRANCH} 失败"
     if git -C "${REPO_DIR}" pull --ff-only; then :; else
         log "[warn] git pull 失败 (本地有改动或网络问题), 继续使用现有代码"
     fi
 else
-    log "git clone: ${REPO_URL} -> ${REPO_DIR}"
-    if ! git clone "${clone_url}" "${REPO_DIR}"; then
+    log "git clone: ${REPO_URL} (分支 ${REPO_BRANCH}) -> ${REPO_DIR}"
+    if ! git clone -b "${REPO_BRANCH}" "${clone_url}" "${REPO_DIR}"; then
         log "[error] git clone 失败 (私有仓请设置 GIT_TOKEN, 或用 REPO_URL 指定内部镜像)"
         exit 1
     fi
 fi
 
-cd "${REPO_DIR}" || exit 1
+# 测试套件目录: 独立仓 = 仓库根; 大仓嵌套布局 = 仓库根/$(SUITE_REL_PATH)
+SUITE_DIR="${REPO_DIR}"
+if [ -n "${SUITE_REL_PATH}" ]; then
+    SUITE_DIR="${REPO_DIR}/${SUITE_REL_PATH}"
+fi
+if [ ! -d "${SUITE_DIR}" ]; then
+    log "[error] 测试套件目录不存在: ${SUITE_DIR} (SUITE_REL_PATH=${SUITE_REL_PATH})"
+    exit 1
+fi
+cd "${SUITE_DIR}" || exit 1
+log "测试套件目录: ${SUITE_DIR}"
 log "当前代码: $(git rev-parse --short HEAD) | $(git log -1 --pretty=%s | head -c 60)"
 
 # ---------------------------------------------------------------- 2. 用例清单
@@ -87,9 +110,9 @@ elif [ -f "${SCRIPT_DIR}/${TESTCASES_FILE}" ]; then
     CASES_FILE="${SCRIPT_DIR}/${TESTCASES_FILE}"
     log "使用外部用例清单 (可自由增删用例, 不受 git 更新影响): ${CASES_FILE}"
 else
-    CASES_FILE="${REPO_DIR}/${TESTCASES_FILE}"
+    CASES_FILE="${SUITE_DIR}/${TESTCASES_FILE}"
     if [ ! -f "${CASES_FILE}" ]; then
-        log "仓库无内置清单, 自动收集生成: ${CASES_FILE}"
+        log "套件内无内置清单, 自动收集生成: ${CASES_FILE}"
         "${PYTHON}" tools/generate_testcases.py -o "${CASES_FILE}" \
             || { log "[error] 无法获得用例清单, 退出"; exit 1; }
     fi
@@ -101,8 +124,8 @@ else
 fi
 
 if [ "${REGENERATE_CASES}" = "1" ]; then
-    log "REGENERATE_CASES=1: 重新收集全量用例到仓库内置清单..."
-    "${PYTHON}" tools/generate_testcases.py -o "${REPO_DIR}/${TESTCASES_FILE}" \
+    log "REGENERATE_CASES=1: 重新收集全量用例到套件内置清单..."
+    "${PYTHON}" tools/generate_testcases.py -o "${SUITE_DIR}/${TESTCASES_FILE}" \
         || log "[warn] 全量清单重新生成失败"
     if [ -f "${SCRIPT_DIR}/${TESTCASES_FILE}" ]; then
         log "把新增用例同步进外部清单 (保留已有增删与注释)..."

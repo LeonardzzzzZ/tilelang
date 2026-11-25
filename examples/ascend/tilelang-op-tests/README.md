@@ -48,15 +48,15 @@ tilelang-op-tests/
 
 ```bash
 # 1. 把 tools/run_tests.sh 单独拷贝到服务器任意目录, 然后:
-bash run_tests.sh                                   # 默认克隆 gitcode 仓库并全量执行
+bash run_tests.sh                                   # 默认克隆 github tilelang 仓 (tilelang-op-tests 分支) 并全量执行
 GIT_TOKEN=<令牌> bash run_tests.sh                  # 私有仓需要令牌 (GIT_USER 可选)
 PYTHON=/path/to/python bash run_tests.sh            # 指定解释器 (conda/venv 等)
 
 # 可选环境变量:
-#   REGENERATE_CASES=1   在服务器上重新收集用例清单 (默认用仓库内置 testcases.txt)
+#   REGENERATE_CASES=1   在服务器上重新收集用例清单 (默认用套件内置 testcases.txt)
 #   CASE_TIMEOUT=1800    单条用例超时秒数
 #   EXTRA_PYTEST_ARGS    附加 pytest 参数
-#   REPO_URL             使用内部镜像地址
+#   REPO_URL / REPO_BRANCH / SUITE_REL_PATH   指向独立仓等其他布局
 ```
 
 产物(均在脚本所在目录):
